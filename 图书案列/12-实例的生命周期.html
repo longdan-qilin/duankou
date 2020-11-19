@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <div>{{msg}}</div>
+    <button @click='update'>更新</button>
+    <button @click='destroy'>销毁</button>
+  </div>
+  <script type="text/javascript" src="js/vue.js"></script>
+  <script type="text/javascript">
+    /*
+      Vue实例的生命周期：想尽可能早的使用 data 和 methods 可以把代码写到 created 里面
+      想操作 DOM 并且操作渲染之后的数据，把代码写到 mounted 里面
+    */
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        msg: '生命周期'
+      },
+      methods: {
+        update: function(){
+          this.msg = 'hello';
+        },
+        destroy: function(){
+          this.$destroy();
+        }
+      },
+      beforeCreate: function(){
+        // 实例初始化之后，但是这个阶段实例的 data 和 methods 是读不到的
+        console.log(this.msg); // undefined
+        console.log('beforeCreate');
+      },
+      created: function(){
+        // 实例创建之后，可以访问 data 和 methods
+        // 渲染之前，this.$el 属性目前不可见，$el 是 Vue 实例关联的 DOM 元素
+        console.log(this.$el); // undefined
+        console.log('created');
+      },
+      beforeMount: function(){
+        // 在渲染之前被调用，this.$el 可用，但是并不能获取渲染后的内容，例如 `this.$el.innerHTML`
+        console.log(this.$el); // <div id="app"></div>
+        console.log(this.$el.innerHTML); // 拿到的还是模板数据，真正数据还没有渲染
+        console.log('beforeMount');
+      },
+      mounted: function(){
+        // 数据已经渲染到页面上了，可以通过 `this.$el.innerHTML` 获取渲染后的内容
+        console.log(this.$el.innerHTML); // 里面已经包含了实际渲染后的内容
+        console.log('mounted');
+      },
+      beforeUpdate: function(){
+        console.log('beforeUpdate');
+      },
+      updated: function(){
+        console.log('updated');
+      },
+      beforeDestroy: function(){
+        console.log('beforeDestroy');
+      },
+      destroyed: function(){
+        console.log('destroyed');
+      }
+    });
+  </script>
+</body>
+</html>
